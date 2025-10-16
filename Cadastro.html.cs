@@ -42,13 +42,13 @@ namespace StockVision.Pages
         {
             if (string.IsNullOrEmpty(Nome) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Senha))
             {
-                MensagemErro = "Por favor, preencha todos os campos obrigatÛrios.";
+                MensagemErro = "Por favor, preencha todos os campos obrigat√≥rios.";
                 return Page();
             }
 
             if (Senha != ConfirmarSenha)
             {
-                MensagemErro = "As senhas n„o coincidem.";
+                MensagemErro = "As senhas n√£o coincidem.";
                 return Page();
             }
 
@@ -70,13 +70,13 @@ namespace StockVision.Pages
             var sucesso = _authService.Registrar(usuario);
             if (sucesso)
             {
-                MensagemSucesso = "Conta criada com sucesso! VocÍ j· pode fazer login.";
+                MensagemSucesso = "Conta criada com sucesso! Voc√™ j√° pode fazer login.";
                 // Limpar os campos
                 Nome = Email = Senha = ConfirmarSenha = Empresa = Telefone = string.Empty;
             }
             else
             {
-                MensagemErro = "Este email j· est· em uso. Tente outro email.";
+                MensagemErro = "Este email j√° est√° em uso. Tente outro email.";
             }
 
             return Page();
