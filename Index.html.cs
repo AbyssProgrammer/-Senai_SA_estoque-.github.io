@@ -29,7 +29,7 @@ namespace StockVision.Pages
 
         public IActionResult OnGet()
         {
-            // Se usu·rio j· est· logado, redireciona direto para o Dashboard
+            // Se usu√°rio j√° est√° logado, redireciona direto para o Dashboard
             if (HttpContext.Session.GetString("UsuarioLogado") == "true")
             {
                 return RedirectToPage("/Dashboard");
@@ -72,7 +72,7 @@ namespace StockVision.Pages
 
             if (SenhaCadastro != ConfirmarSenhaCadastro)
             {
-                MensagemErroCadastro = "As senhas n„o coincidem.";
+                MensagemErroCadastro = "As senhas n√£o coincidem.";
                 return Page();
             }
 
@@ -94,7 +94,7 @@ namespace StockVision.Pages
 
             if (sucesso)
             {
-                // ApÛs cadastro bem-sucedido, faz login AUTOM¡TICO e vai para o Dashboard
+                // Ap√≥s cadastro bem-sucedido, faz login AUTOM√ÅTICO e vai para o Dashboard
                 HttpContext.Session.SetString("UsuarioLogado", "true");
                 HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
                 HttpContext.Session.SetString("UsuarioNome", usuario.Nome);
@@ -104,7 +104,7 @@ namespace StockVision.Pages
             }
             else
             {
-                MensagemErroCadastro = "Este email j· est· em uso.";
+                MensagemErroCadastro = "Este email j√° est√° em uso.";
                 return Page();
             }
         }
