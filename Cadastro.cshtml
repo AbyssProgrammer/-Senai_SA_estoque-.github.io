@@ -1,0 +1,266 @@
+﻿@page
+@model StockVision.Pages.CadastroModel
+@{
+    ViewData["Title"] = "Cadastro - StockVision";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            margin: 2rem auto;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .register-body {
+            padding: 2rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+            }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .password-strength {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="register-container animate-fade-in-up">
+                    <!-- Header -->
+                    <div class="register-header">
+                        <i class="fas fa-rocket fa-3x mb-3"></i>
+                        <h2 class="fw-bold">Comece Agora</h2>
+                        <p class="mb-0 opacity-75">Crie sua conta no StockVision</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="register-body">
+                        @if (!string.IsNullOrEmpty(Model.MensagemErro))
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>@Model.MensagemErro
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.MensagemSucesso))
+                        {
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>@Model.MensagemSucesso
+                            </div>
+                        }
+
+                        <form method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Nome Completo *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-user text-muted"></i>
+                                        </span>
+                                        <input type="text" class="form-control border-start-0" name="nome"
+                                               value="@Model.Nome" placeholder="Seu nome completo" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Empresa</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-building text-muted"></i>
+                                        </span>
+                                        <input type="text" class="form-control border-start-0" name="empresa"
+                                               value="@Model.Empresa" placeholder="Sua empresa">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-envelope text-muted"></i>
+                                    </span>
+                                    <input type="email" class="form-control border-start-0" name="email"
+                                           value="@Model.Email" placeholder="seu@email.com" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Telefone</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-phone text-muted"></i>
+                                    </span>
+                                    <input type="tel" class="form-control border-start-0" name="telefone"
+                                           value="@Model.Telefone" placeholder="(11) 99999-9999">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Senha *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-lock text-muted"></i>
+                                    </span>
+                                    <input type="password" class="form-control border-start-0" name="senha"
+                                           id="senha" placeholder="Mínimo 6 caracteres" required
+                                           oninput="verificarForcaSenha(this.value)">
+                                </div>
+                                <div class="progress-bar mt-1" id="passwordStrengthBar" style="width: 0%"></div>
+                                <div class="password-strength text-muted" id="passwordStrengthText">
+                                    Força da senha: Muito fraca
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Confirmar Senha *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-lock text-muted"></i>
+                                    </span>
+                                    <input type="password" class="form-control border-start-0" name="confirmarSenha"
+                                           placeholder="Digite a senha novamente" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="termos" required>
+                                <label class="form-check-label" for="termos">
+                                    Concordo com os <a href="#" class="text-decoration-none">Termos de Serviço</a>
+                                    e <a href="#" class="text-decoration-none">Política de Privacidade</a>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                                <i class="fas fa-user-plus me-2"></i>Criar Conta
+                            </button>
+                        </form>
+
+                        <div class="text-center">
+                            <p class="text-muted mb-0">Já tem uma conta?</p>
+                            <a href="/Login" class="text-decoration-none fw-semibold">
+                                <i class="fas fa-sign-in-alt me-1"></i>Fazer Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function verificarForcaSenha(senha) {
+            const bar = document.getElementById('passwordStrengthBar');
+            const text = document.getElementById('passwordStrengthText');
+
+            let forca = 0;
+            let texto = 'Muito fraca';
+            let cor = '#dc3545';
+            let largura = '20%';
+
+            if (senha.length >= 6) forca++;
+            if (senha.length >= 8) forca++;
+            if (/[A-Z]/.test(senha)) forca++;
+            if (/[0-9]/.test(senha)) forca++;
+            if (/[^A-Za-z0-9]/.test(senha)) forca++;
+
+            switch (forca) {
+                case 1:
+                    texto = 'Fraca';
+                    cor = '#fd7e14';
+                    largura = '40%';
+                    break;
+                case 2:
+                    texto = 'Razoável';
+                    cor = '#ffc107';
+                    largura = '60%';
+                    break;
+                case 3:
+                    texto = 'Boa';
+                    cor = '#20c997';
+                    largura = '80%';
+                    break;
+                case 4:
+                case 5:
+                    texto = 'Forte';
+                    cor = '#198754';
+                    largura = '100%';
+                    break;
+            }
+
+            bar.style.width = largura;
+            bar.style.background = cor;
+            text.textContent = `Força da senha: ${texto}`;
+            text.style.color = cor;
+        }
+    </script>
+</body>
+</html>

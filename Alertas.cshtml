@@ -1,0 +1,86 @@
+﻿@page
+@model StockVision.Pages.AlertasModel
+@{
+    ViewData["Title"] = "Alertas - StockVision";
+}
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 fw-bold text-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>Alertas de Estoque
+            </h1>
+            <p class="text-muted">Produtos que necessitam de atenção imediata</p>
+        </div>
+        <div>
+            <a href="/Estoque" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar ao Estoque
+            </a>
+        </div>
+    </div>
+
+    @if (Model.ProdutosComAlerta.Any())
+    {
+        <div class="alert alert-warning">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                <div>
+                    <h5 class="alert-heading">Atenção Requerida!</h5>
+                    <p class="mb-0">Existem <strong>@Model.ProdutosComAlerta.Count</strong> produtos com estoque abaixo do mínimo recomendado.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var produto in Model.ProdutosComAlerta)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-box me-2"></i>@produto.Nome
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <small class="text-muted">Estoque Atual</small>
+                                    <h4 class="text-danger fw-bold">@produto.Quantidade</h4>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Mínimo</small>
+                                    <h4 class="text-success fw-bold">@produto.EstoqueMinimo</h4>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <small class="text-muted">Categoria:</small>
+                                <span class="badge bg-light text-dark">@produto.Categoria</span>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">Faltam:</small>
+                                <span class="badge bg-danger">@(produto.EstoqueMinimo - produto.Quantidade) unidades</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <button class="btn btn-sm btn-warning w-100" data-bs-toggle="modal" data-bs-target="#entradaModal">
+                                <i class="fas fa-plus-circle me-1"></i>Repor Estoque
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+            <h3 class="text-success">Tudo Sob Controle!</h3>
+            <p class="text-muted">Nenhum alerta de estoque baixo no momento.</p>
+            <a href="/Estoque" class="btn btn-primary mt-3">
+                <i class="fas fa-boxes me-2"></i>Ver Estoque Completo
+            </a>
+        </div>
+    }
+</div>

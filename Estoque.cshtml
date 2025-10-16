@@ -1,0 +1,355 @@
+﻿@page
+@model StockVision.Pages.EstoqueModel
+@{
+    ViewData["Title"] = "Gestão de Estoque - StockVision";
+}
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 fw-bold text-primary">
+                <i class="fas fa-boxes me-2"></i>Gestão de Estoque
+            </h1>
+            <p class="text-muted">Controle completo de entradas, saídas e empréstimos</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#entradaModal">
+                <i class="fas fa-plus-circle me-2"></i>Nova Entrada
+            </button>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#saidaModal">
+                <i class="fas fa-minus-circle me-2"></i>Nova Saída
+            </button>
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#emprestimoModal">
+                <i class="fas fa-handshake me-2"></i>Novo Empréstimo
+            </button>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (Model.ProdutosComAlerta.Any())
+    {
+        <div class="alert alert-warning d-flex align-items-center mb-4">
+            <i class="fas fa-exclamation-triangle me-3 fa-2x"></i>
+            <div class="flex-grow-1">
+                <h5 class="alert-heading mb-1">Alertas de Estoque Baixo!</h5>
+                <p class="mb-0">Existem <strong>@Model.ProdutosComAlerta.Count</strong> produtos precisando de atenção.</p>
+            </div>
+            <a href="/Alertas" class="btn btn-warning">Ver Detalhes</a>
+        </div>
+    }
+
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">@Model.Produtos.Count</h4>
+                            <p class="mb-0">Total de Produtos</p>
+                        </div>
+                        <div class="display-6">📦</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">@Model.Produtos.Count(p => !p.AlertaEstoqueBaixo)</h4>
+                            <p class="mb-0">Em Estoque Normal</p>
+                        </div>
+                        <div class="display-6">✅</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">@Model.ProdutosComAlerta.Count</h4>
+                            <p class="mb-0">Com Alerta</p>
+                        </div>
+                        <div class="display-6">⚠️</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">@Model.Produtos.Sum(p => p.Quantidade)</h4>
+                            <p class="mb-0">Itens no Total</p>
+                        </div>
+                        <div class="display-6">📊</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Produtos -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-list me-2"></i>Produtos em Estoque
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Categoria</th>
+                            <th>Estoque Mínimo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var produto in Model.Produtos)
+                        {
+                            <tr class="@(produto.AlertaEstoqueBaixo ? "table-warning" : "")">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="product-icon me-3">
+                                            @if (produto.Categoria == "Ferramentas")
+                                            {
+                                                <span>🔧</span>
+                                            }
+                                            else if (produto.Categoria == "Fixadores")
+                                            {
+                                                <span>🔩</span>
+                                            }
+                                            else
+                                            {
+                                                <span>📦</span>
+                                            }
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">@produto.Nome</div>
+                                            <small class="text-muted">R$ @produto.Preco.ToString("N2")</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary fs-6">@produto.Quantidade und</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark">@produto.Categoria</span>
+                                </td>
+                                <td>@produto.EstoqueMinimo</td>
+                                <td>
+                                    @if (produto.AlertaEstoqueBaixo)
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-exclamation-circle me-1"></i>Estoque Baixo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>Normal
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary"
+                                                onclick="editarProduto(@produto.Id, '@produto.Nome', @produto.Quantidade, '@produto.Categoria', @produto.EstoqueMinimo, @produto.Preco)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Links para Relatórios -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <a href="/Relatorios?tipo=entradas" class="card text-decoration-none">
+                <div class="card-body text-center">
+                    <i class="fas fa-sign-in-alt fa-2x text-success mb-3"></i>
+                    <h5>Relatório de Entradas</h5>
+                    <p class="text-muted">Ver todas as entradas de produtos</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/Relatorios?tipo=saidas" class="card text-decoration-none">
+                <div class="card-body text-center">
+                    <i class="fas fa-sign-out-alt fa-2x text-warning mb-3"></i>
+                    <h5>Relatório de Saídas</h5>
+                    <p class="text-muted">Ver todas as saídas de produtos</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/Relatorios?tipo=emprestimos" class="card text-decoration-none">
+                <div class="card-body text-center">
+                    <i class="fas fa-handshake fa-2x text-info mb-3"></i>
+                    <h5>Relatório de Empréstimos</h5>
+                    <p class="text-muted">Ver todos os empréstimos</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Entrada -->
+<div class="modal fade" id="entradaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar Entrada de Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Entrada">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nome do Produto</label>
+                        <input type="text" class="form-control" name="produtoNome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" class="form-control" name="quantidade" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observação (Opcional)</label>
+                        <textarea class="form-control" name="observacao" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Registrar Entrada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Saída -->
+<div class="modal fade" id="saidaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar Saída de Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Saida">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Produto</label>
+                        <select class="form-control" name="produtoNome" required>
+                            <option value="">Selecione um produto</option>
+                            @foreach (var produto in Model.Produtos)
+                            {
+                                <option value="@produto.Nome">@produto.Nome (Estoque: @produto.Quantidade)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" class="form-control" name="quantidade" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observação (Opcional)</label>
+                        <textarea class="form-control" name="observacao" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">Registrar Saída</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Empréstimo -->
+<div class="modal fade" id="emprestimoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar Empréstimo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Emprestimo">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Produto/Ferramenta</label>
+                        <select class="form-control" name="produtoNome" required>
+                            <option value="">Selecione um produto</option>
+                            @foreach (var produto in Model.Produtos)
+                            {
+                                <option value="@produto.Nome">@produto.Nome (Estoque: @produto.Quantidade)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" class="form-control" name="quantidade" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nome da Pessoa</label>
+                        <input type="text" class="form-control" name="pessoa" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Devolução</label>
+                        <input type="date" class="form-control" name="dataDevolucao" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observação (Opcional)</label>
+                        <textarea class="form-control" name="observacao" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-info">Registrar Empréstimo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-icon {
+        width: 40px;
+        height: 40px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function editarProduto(id, nome, quantidade, categoria, estoqueMinimo, preco) {
+            // Implementar edição de produto
+            alert(`Editar produto: ${nome}`);
+        }
+    </script>
+}
