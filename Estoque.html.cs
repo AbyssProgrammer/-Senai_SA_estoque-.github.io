@@ -12,7 +12,7 @@ namespace StockVision.Pages
         public List<Produto> Produtos { get; set; } = new List<Produto>();
         public List<Produto> ProdutosComAlerta { get; set; } = new List<Produto>();
 
-        // Propriedades para os formul·rios
+        // Propriedades para os formul√°rios
         [BindProperty]
         public string ProdutoNome { get; set; } = string.Empty;
 
@@ -48,13 +48,13 @@ namespace StockVision.Pages
             }
             else
             {
-                TempData["Erro"] = "Por favor, preencha todos os campos obrigatÛrios.";
+                TempData["Erro"] = "Por favor, preencha todos os campos obrigat√≥rios.";
             }
 
             return RedirectToPage();
         }
 
-        // Handler para SaÌda
+        // Handler para Sa√≠da
         public IActionResult OnPostSaida()
         {
             if (!string.IsNullOrEmpty(ProdutoNome) && Quantidade > 0)
@@ -62,22 +62,22 @@ namespace StockVision.Pages
                 var sucesso = _estoqueService.RegistrarSaida(ProdutoNome, Quantidade, Observacao);
                 if (sucesso)
                 {
-                    TempData["Sucesso"] = $"SaÌda de {Quantidade} unidades de '{ProdutoNome}' registrada com sucesso!";
+                    TempData["Sucesso"] = $"Sa√≠da de {Quantidade} unidades de '{ProdutoNome}' registrada com sucesso!";
                 }
                 else
                 {
-                    TempData["Erro"] = $"Erro: Estoque insuficiente de '{ProdutoNome}' ou produto n„o encontrado.";
+                    TempData["Erro"] = $"Erro: Estoque insuficiente de '{ProdutoNome}' ou produto n√£o encontrado.";
                 }
             }
             else
             {
-                TempData["Erro"] = "Por favor, preencha todos os campos obrigatÛrios.";
+                TempData["Erro"] = "Por favor, preencha todos os campos obrigat√≥rios.";
             }
 
             return RedirectToPage();
         }
 
-        // Handler para EmprÈstimo
+        // Handler para Empr√©stimo
         public IActionResult OnPostEmprestimo()
         {
             if (!string.IsNullOrEmpty(ProdutoNome) && Quantidade > 0 && !string.IsNullOrEmpty(Pessoa) && DataDevolucao > DateTime.Now)
@@ -85,16 +85,16 @@ namespace StockVision.Pages
                 var sucesso = _estoqueService.RegistrarEmprestimo(ProdutoNome, Quantidade, Pessoa, DataDevolucao, Observacao);
                 if (sucesso)
                 {
-                    TempData["Sucesso"] = $"EmprÈstimo de {Quantidade} unidades de '{ProdutoNome}' para {Pessoa} registrado com sucesso!";
+                    TempData["Sucesso"] = $"Empr√©stimo de {Quantidade} unidades de '{ProdutoNome}' para {Pessoa} registrado com sucesso!";
                 }
                 else
                 {
-                    TempData["Erro"] = $"Erro: Estoque insuficiente de '{ProdutoNome}' ou produto n„o encontrado.";
+                    TempData["Erro"] = $"Erro: Estoque insuficiente de '{ProdutoNome}' ou produto n√£o encontrado.";
                 }
             }
             else
             {
-                TempData["Erro"] = "Por favor, preencha todos os campos obrigatÛrios com dados v·lidos.";
+                TempData["Erro"] = "Por favor, preencha todos os campos obrigat√≥rios com dados v√°lidos.";
             }
 
             return RedirectToPage();
