@@ -9,7 +9,7 @@ namespace StockVision.Pages
         private readonly EstoqueService _estoqueService;
         private readonly AuthService _authService;
 
-        public string NomeUsuario { get; set; } = "Usuário";
+        public string NomeUsuario { get; set; } = "UsuÃ¡rio";
         public int TotalProdutos { get; set; }
         public int TotalEntradas { get; set; }
         public int TotalSaidas { get; set; }
@@ -25,13 +25,13 @@ namespace StockVision.Pages
 
         public IActionResult OnGet()
         {
-            // Verificar se usuário está logado
+            // Verificar se usuÃ¡rio estÃ¡ logado
             if (HttpContext.Session.GetString("UsuarioLogado") != "true")
             {
                 return RedirectToPage("/Index");
             }
 
-            // Carregar dados do usuário
+            // Carregar dados do usuÃ¡rio
             var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
             var usuario = _authService.ObterPorId(usuarioId ?? 0);
 
@@ -46,7 +46,7 @@ namespace StockVision.Pages
             ProdutosComAlerta = _estoqueService.ObterComAlerta();
             AlertasAtivos = ProdutosComAlerta.Count;
 
-            // Carregar movimentações
+            // Carregar movimentaÃ§Ãµes
             UltimasMovimentacoes = _estoqueService.ObterTodasMovimentacoes()
                 .OrderByDescending(m => m.DataMovimentacao)
                 .Take(5)
